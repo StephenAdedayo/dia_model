@@ -1,14 +1,8 @@
 library(plumber)
 library(caret)
 library(randomForest)
-library(e1071)
-library(class)
-library(rpart)
-library(tidyverse)
-library(MLmetrics)
-library(pROC)
 
-# Load your saved model and dummyVars object
+# Load saved model and dummyVars object
 model <- readRDS("model.rds")
 dmy <- readRDS("dmy.rds")
 
@@ -72,6 +66,7 @@ function(Age, Gender, Polyuria, Polydipsia, SuddenWeightLoss,
   )
   
   new_data_transformed <- data.frame(predict(dmy, newdata = new_data))
+  
   prediction <- predict(model, new_data_transformed, type = "prob")[, "Positive"]
   result <- ifelse(prediction > 0.5, "Positive", "Negative")
   
