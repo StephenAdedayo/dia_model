@@ -1,10 +1,16 @@
 library(plumber)
 library(caret)
 library(randomForest)
+library(e1071)
+library(class)
+library(rpart)
+library(tidyverse)
+library(MLmetrics)
+library(pROC)
 
 # Load your saved model and dummyVars object
 model <- readRDS("model.rds")
-dmy   <- readRDS("dmy.rds")
+dmy <- readRDS("dmy.rds")
 
 # Enable CORS for all endpoints
 #* @filter cors
@@ -45,7 +51,7 @@ function(Age, Gender, Polyuria, Polydipsia, SuddenWeightLoss,
          weakness, Polyphagia, GenitalThrush, VisualBlurring,
          Itching, Irritability, DelayedHealing, PartialParesis,
          MuscleStiffness, Alopecia, Obesity) {
-  
+
   new_data <- data.frame(
     Age = as.numeric(Age),
     Gender = as.factor(Gender),
@@ -66,11 +72,8 @@ function(Age, Gender, Polyuria, Polydipsia, SuddenWeightLoss,
   )
   
   new_data_transformed <- data.frame(predict(dmy, newdata = new_data))
-  
   prediction <- predict(model, new_data_transformed, type = "prob")[, "Positive"]
   result <- ifelse(prediction > 0.5, "Positive", "Negative")
   
   return(list(prediction = result, probability = prediction))
 }
-
-
