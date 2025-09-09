@@ -1,4 +1,8 @@
-packages <- c("plumber", "caret", "randomForest", "e1071", "class", "rpart", "MLmetrics", "pROC")
+# install.R
+packages <- c(
+  "plumber", "caret", "randomForest", "e1071", "class", "rpart",
+  "tidyverse", "MLmetrics", "pROC"
+)
 
 installed <- packages %in% rownames(installed.packages())
 if(any(!installed)){

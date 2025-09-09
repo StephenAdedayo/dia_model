@@ -1,12 +1,13 @@
 library(plumber)
 library(caret)
 library(randomForest)
+library(tidyverse)
 
-# Load saved model and dummyVars object
+# Load model
 model <- readRDS("model.rds")
-dmy <- readRDS("dmy.rds")
+dmy   <- readRDS("dmy.rds")
 
-# Enable CORS for all endpoints
+# Enable CORS
 #* @filter cors
 function(req, res){
   res$setHeader("Access-Control-Allow-Origin", "*")
@@ -45,7 +46,7 @@ function(Age, Gender, Polyuria, Polydipsia, SuddenWeightLoss,
          weakness, Polyphagia, GenitalThrush, VisualBlurring,
          Itching, Irritability, DelayedHealing, PartialParesis,
          MuscleStiffness, Alopecia, Obesity) {
-
+  
   new_data <- data.frame(
     Age = as.numeric(Age),
     Gender = as.factor(Gender),
