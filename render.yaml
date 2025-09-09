@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: diabetes-api
+    env: r
+    plan: free
+    buildCommand: ""
+    startCommand: Rscript run_api.R
