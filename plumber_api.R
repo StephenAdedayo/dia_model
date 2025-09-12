@@ -1,9 +1,8 @@
 library(plumber)
-library(caret)
 library(randomForest)
-library(tidyverse)
+library(fastDummies)
 
-# Load model
+# Load model and dummy variable transformer
 model <- readRDS("model.rds")
 dmy   <- readRDS("dmy.rds")
 
@@ -47,6 +46,7 @@ function(Age, Gender, Polyuria, Polydipsia, SuddenWeightLoss,
          Itching, Irritability, DelayedHealing, PartialParesis,
          MuscleStiffness, Alopecia, Obesity) {
   
+  # Create new data frame
   new_data <- data.frame(
     Age = as.numeric(Age),
     Gender = as.factor(Gender),
@@ -66,8 +66,10 @@ function(Age, Gender, Polyuria, Polydipsia, SuddenWeightLoss,
     Obesity = as.factor(Obesity)
   )
   
-  new_data_transformed <- data.frame(predict(dmy, newdata = new_data))
+  # Transform with dummy variables
+  new_data_transformed <- predict(dmy, newdata = new_data)
   
+  # Predict probability
   prediction <- predict(model, new_data_transformed, type = "prob")[, "Positive"]
   result <- ifelse(prediction > 0.5, "Positive", "Negative")
   
